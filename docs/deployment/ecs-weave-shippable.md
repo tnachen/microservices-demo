@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # Container-based microservices with AWS, Weave and Shippable
 
 In this scenario, you'll set up and run the containerized Socks Shop
