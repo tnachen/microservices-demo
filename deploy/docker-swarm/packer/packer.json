@@ -27,9 +27,9 @@
         "disk_size" : 10000,
         "ssh_username": "vagrant",
         "ssh_password": "vagrant",
-        "ssh_port": "22",
         "ssh_wait_timeout": "10000s",
-        "http_directory": "seeds",
+        "http_directory": "packer",
+        "headless": "true",
         "boot_wait": "5s",
         "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
         "boot_command": [
@@ -69,12 +69,21 @@
             "echo \"deb https://apt.dockerproject.org/repo ubuntu-xenial main\" | sudo tee /etc/apt/sources.list.d/docker.list",
             "sudo apt-get update",
             "sudo apt-get install -yq linux-image-extra-$(uname -r) linux-image-extra-virtual docker-engine",
+            "sudo curl -L \"https://github.com/docker/compose/releases/download/1.8.1/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose",
+            "sudo chmod +x /usr/local/bin/docker-compose",
             "sudo curl -L git.io/weave -o /usr/local/bin/weave",
             "sudo chmod +x /usr/local/bin/weave"
         ]
     }],
     "post-processors": [{
         "type": "vagrant",
-        "only": ["virtualbox-iso"]
+        "only": ["virtualbox-iso"],
+        "include": ["docker-compose.yml"],
+        "keep_input_artifact": false,
+        "output": "packer/docker-swarm.box"
+    },{
+        "type": "shell-local",
+        "only": ["virtualbox-iso"],
+        "inline": ["vagrant box add --force docker-swarm packer/docker-swarm.box"]
     }]
 }

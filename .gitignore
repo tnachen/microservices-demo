@@ -120,3 +120,6 @@ coverage/
 
 # Tern
 .tern-port
+
+packer_cache
+docker-swarm.box
